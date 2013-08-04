@@ -3,15 +3,17 @@
 ; Licensed under an MIT licence.  Please see LICENCE.md for details.
 
 (require racket/string)
+(require racket/contract)
 
 (provide
- (prefix-out xdgbasedir-
-             (combine-out data-home
-                          config-home
-                          cache-home
-                          data-dirs
-                          config-dirs
-                          runtime-dir)))
+ (contract-out
+  [xdgbasedir-data-home (->* () (string?) path?)]
+  [xdgbasedir-config-home (->* () (string?) path?)]
+  [xdgbasedir-cache-home (->* () (string?) path?)]
+  [xdgbasedir-data-dirs (->* () (string?) (listof path?))]
+  [xdgbasedir-config-dirs (->* () (string?) (listof path?))]
+  [xdgbasedir-runtime-dir (->* () (string?) (or/c path? boolean?))]))
+
 
 (define (default var)
   (case var
@@ -49,12 +51,12 @@
 ;==================================================
 ;                  Exported Functions
 ;==================================================
-(define (data-home [subdir ""]) (dir "XDG_DATA_HOME" subdir))
-(define (config-home [subdir ""]) (dir "XDG_CONFIG_HOME" subdir))
-(define (cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
-(define (data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
-(define (config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
-(define (runtime-dir [subdir ""])
+(define (xdgbasedir-data-home [subdir ""]) (dir "XDG_DATA_HOME" subdir))
+(define (xdgbasedir-config-home [subdir ""]) (dir "XDG_CONFIG_HOME" subdir))
+(define (xdgbasedir-cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
+(define (xdgbasedir-data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
+(define (xdgbasedir-config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
+(define (xdgbasedir-runtime-dir [subdir ""])
   (if (string-not-empty? (getenv "XDG_RUNTIME_DIR"))
       (dir "XDG_RUNTIME_DIR" subdir)
       #f))
