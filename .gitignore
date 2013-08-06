@@ -4,4 +4,8 @@
 #Backup files
 *~
 
+# Racket files
+xdgbasedir.plt
+doc/
+planet-docs/
 compiled/
