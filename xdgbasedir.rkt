@@ -7,12 +7,12 @@
 
 (provide
  (contract-out
-  [xdgbasedir-data-home (->* () (string?) path?)]
-  [xdgbasedir-config-home (->* () (string?) path?)]
-  [xdgbasedir-cache-home (->* () (string?) path?)]
-  [xdgbasedir-data-dirs (->* () (string?) (listof path?))]
-  [xdgbasedir-config-dirs (->* () (string?) (listof path?))]
-  [xdgbasedir-runtime-dir (->* () (string?) (or/c path? boolean?))]))
+  [xdgbasedir-data-home (->* () (path-string?) path?)]
+  [xdgbasedir-config-home (->* () (path-string?) path?)]
+  [xdgbasedir-cache-home (->* () (path-string?) path?)]
+  [xdgbasedir-data-dirs (->* () (path-string?) (listof path?))]
+  [xdgbasedir-config-dirs (->* () (path-string?) (listof path?))]
+  [xdgbasedir-runtime-dir (->* () (path-string?) (or/c path? boolean?))]))
 
 
 (define (default var)
