@@ -2,11 +2,11 @@
 
 @(require planet/scribble
           (for-label racket
-                     (this-package-in main)))
+                     xdgbasedir))
 
 @title{Exported functions}
 
-@defmodule/this-package[main]
+@defmodule[xdgbasedir]
 
 In all the functions below @scheme[subdir] indicates the name of the application that the files relate to.
 
