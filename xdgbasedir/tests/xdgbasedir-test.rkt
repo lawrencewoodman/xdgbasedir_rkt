@@ -8,6 +8,13 @@
 (define (before-every-test) (set! env-vars (get-all-xdg-vars)))
 (define (after-every-test) (restore-all-xdg-vars env-vars))
 
+(test-exn
+ "data-home raises an exception if not run on unix"
+ exn:fail?
+ (λ ()
+   (parameterize ([xdgbasedir-current-os 'windows])
+     (xdgbasedir-data-home))))
+
 (test-equal?
  "data-home returns the set XDG_DATA_HOME directory"
  (around
@@ -46,6 +53,13 @@
   (after-every-test))
  (build-path (getenv "HOME") ".local" "share" "some_dir"))
 
+
+(test-exn
+ "config-home raises an exception if not run on unix"
+ exn:fail?
+ (λ ()
+   (parameterize ([xdgbasedir-current-os 'macosx])
+     (xdgbasedir-config-home))))
 
 (test-equal?
  "config-home returns the set XDG_CONFIG_HOME directory"
@@ -87,6 +101,13 @@ not set"
  (build-path (getenv "HOME") ".config" "some_dir"))
 
 
+(test-exn
+ "cache-home raises an exception if not run on unix"
+ exn:fail?
+ (λ ()
+   (parameterize ([xdgbasedir-current-os 'windows])
+     (xdgbasedir-cache-home))))
+
 (test-equal?
  "cache-home returns the set XDG_CACHE_HOME directory"
  (around
@@ -126,6 +147,13 @@ not set"
   (after-every-test))
  (build-path (getenv "HOME") ".cache" "some_dir"))
 
+
+(test-exn
+ "data-dirs raises an exception if not run on unix"
+ exn:fail?
+ (λ ()
+   (parameterize ([xdgbasedir-current-os 'windows])
+     (xdgbasedir-data-dirs))))
 
 (test-equal?
  "data-dirs returns the set XDG_DATA_DIRS directories"
@@ -177,6 +205,13 @@ not set"
        (build-path "/usr" "share" "some_dir")))
 
 
+(test-exn
+ "config-dirs raises an exception if not run on unix"
+ exn:fail?
+ (λ ()
+   (parameterize ([xdgbasedir-current-os 'windows])
+     (xdgbasedir-config-dirs))))
+
 (test-equal?
  "config-dirs returns the set XDG_CONFIG_DIRS directories"
  (around
@@ -224,6 +259,12 @@ not set"
   (after-every-test))
  (list (build-path "/etc" "xdg" "some_dir")))
 
+(test-exn
+ "runtime-dir raises an exception if not run on unix"
+ exn:fail?
+ (λ ()
+   (parameterize ([xdgbasedir-current-os 'windows])
+     (xdgbasedir-runtime-dir))))
 
 (test-equal?
  "runtime-dir returns the set XDG_RUNTIME_DIR directories"
@@ -246,7 +287,7 @@ not set"
  (build-path "/tmp" "xdg_runtime_dir" "some_dir"))
 
 (test-equal?
- "runtime-dir returns default directories if XDG_RUNTIME_DIR not set"
+ "runtime-dir returns #f if XDG_RUNTIME_DIR not set"
  (around
   (before-every-test)
   (putenv "XDG_RUNTIME_DIR" "")
@@ -255,8 +296,7 @@ not set"
  #f)
 
 (test-equal?
- "runtime-dir returns the default directories with subdir if XDG_RUNTIME_DIR \
-not set"
+ "runtime-dir returns #f if XDG_RUNTIME_DIR not set, even if subdir given"
  (around
   (before-every-test)
   (putenv "XDG_RUNTIME_DIR" "")

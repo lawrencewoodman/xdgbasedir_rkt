@@ -6,6 +6,7 @@
 (require racket/contract)
 
 (provide
+ xdgbasedir-current-os
  (contract-out
   [xdgbasedir-data-home (->* () (path-string?) path?)]
   [xdgbasedir-config-home (->* () (path-string?) path?)]
@@ -13,6 +14,17 @@
   [xdgbasedir-data-dirs (->* () (path-string?) (listof path?))]
   [xdgbasedir-config-dirs (->* () (path-string?) (listof path?))]
   [xdgbasedir-runtime-dir (->* () (path-string?) (or/c path? boolean?))]))
+
+; Defined as a parameter so that we can force the os when testing
+(define xdgbasedir-current-os (make-parameter (system-type 'os)))
+
+; Ensure will only run body on unix, else raise an exception
+(define-syntax-rule (run-on-unix-or-exn body ...)
+  (if (equal? (xdgbasedir-current-os) 'unix)
+      (begin body ...)
+      (error
+       (string-append "Unsupported os: "
+                      (symbol->string (xdgbasedir-current-os))))))
 
 
 (define (default var)
@@ -27,25 +39,28 @@
 (define (string-not-empty? str)
   (and str (not (equal? str ""))))
 
+(define (add-subdir path subdir)
+  (if (equal? subdir "")
+      (build-path path)
+      (build-path path subdir)))
+
 (define (dir var subdir)
-  (let* ([env-var (getenv var)]
-         [main-path
-          (if (string-not-empty? env-var)
-              env-var
-              (default var))])
-    (if (equal? subdir "")
-        (build-path main-path)
-        (build-path main-path subdir))))
+  (run-on-unix-or-exn
+   (let* ([env-var (getenv var)]
+          [main-path
+           (if (string-not-empty? env-var)
+               env-var
+               (default var))])
+     (add-subdir main-path subdir))))
 
 (define (dirs var subdir)
-  (let* ([env-var (getenv var)]
-         [main-paths
-          (if (string-not-empty? env-var)
-              (map (λ (path) (build-path path)) (string-split env-var ":"))
-              (default var))])
-    (if (equal? subdir "")
-        main-paths
-        (map (λ (path) (build-path path subdir)) main-paths))))
+  (run-on-unix-or-exn
+   (let* ([env-var (getenv var)]
+          [main-paths
+           (if (string-not-empty? env-var)
+               (map (λ (path) (build-path path)) (string-split env-var ":"))
+               (default var))])
+     (map (λ (path) (add-subdir path subdir)) main-paths))))
 
 
 ;==================================================
@@ -56,7 +71,10 @@
 (define (xdgbasedir-cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
 (define (xdgbasedir-data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
 (define (xdgbasedir-config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
+
 (define (xdgbasedir-runtime-dir [subdir ""])
-  (if (string-not-empty? (getenv "XDG_RUNTIME_DIR"))
-      (dir "XDG_RUNTIME_DIR" subdir)
-      #f))
+  (run-on-unix-or-exn
+   (let ([runtime-dir (getenv "XDG_RUNTIME_DIR")])
+     (if (string-not-empty? runtime-dir)
+         (add-subdir runtime-dir subdir)
+         #f))))

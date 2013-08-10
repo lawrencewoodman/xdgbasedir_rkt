@@ -10,6 +10,9 @@
 
 In all the functions below @scheme[subdir] indicates the name of the application that the files relate to.
 
+An @code{exn:fail} exception is raised if any of the functions are run on a non-unix system,
+because the defaults make little sense on these operating systems.
+
 @defproc[(xdgbasedir-data-home [subdir path-string?])
          path?]{
  Returns the location of user-specific data files.
