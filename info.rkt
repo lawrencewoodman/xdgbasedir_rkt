@@ -1,3 +1,3 @@
 #lang setup/infotab
 
-(define version "0.1")
+(define version "0.2")
