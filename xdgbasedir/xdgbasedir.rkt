@@ -39,7 +39,7 @@
 (define (string-not-empty? str)
   (and str (not (equal? str ""))))
 
-(define (add-subdir path subdir)
+(define (build-full-path path subdir)
   (if (equal? subdir "")
       (build-path path)
       (build-path path subdir)))
@@ -51,16 +51,16 @@
            (if (string-not-empty? env-var)
                env-var
                (default var))])
-     (add-subdir main-path subdir))))
+     (build-full-path main-path subdir))))
 
 (define (dirs var subdir)
   (run-on-unix-or-exn
    (let* ([env-var (getenv var)]
           [main-paths
            (if (string-not-empty? env-var)
-               (map (λ (path) (build-path path)) (string-split env-var ":"))
+               (string-split env-var ":")
                (default var))])
-     (map (λ (path) (add-subdir path subdir)) main-paths))))
+     (map (λ (path) (build-full-path path subdir)) main-paths))))
 
 
 ;==================================================
@@ -76,5 +76,5 @@
   (run-on-unix-or-exn
    (let ([runtime-dir (getenv "XDG_RUNTIME_DIR")])
      (if (string-not-empty? runtime-dir)
-         (add-subdir runtime-dir subdir)
+         (build-full-path runtime-dir subdir)
          #f))))
