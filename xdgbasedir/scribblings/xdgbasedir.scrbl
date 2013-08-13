@@ -1,7 +1,5 @@
 #lang scribble/manual
 
-@(require planet/scribble)
-
 @title{xdgbasedir}
 @author{@(author+email "Lawrence Woodman" "lwoodman@vlifesystems.com")}
 

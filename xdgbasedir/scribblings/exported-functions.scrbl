@@ -1,7 +1,6 @@
 #lang scribble/manual
 
-@(require planet/scribble
-          (for-label racket
+@(require (for-label racket
                      xdgbasedir))
 
 @title{Exported functions}
