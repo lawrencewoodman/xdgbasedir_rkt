@@ -1,6 +1,7 @@
 #lang racket/base
 ; Copyright (C) 2013 Lawrence Woodman
-; Licensed under an MIT licence.  Please see LICENCE.md for details.
+; Licensed under an MIT licence.
+; Please see scribblings/licence.scrbl for details.
 
 (require racket/string)
 (require racket/contract)

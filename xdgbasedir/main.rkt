@@ -2,7 +2,8 @@
 ; XDG Base Directory Specification handling
 ;
 ; Copyright (C) 2013 Lawrence Woodman
-; Licensed under an MIT licence.  Please see LICENCE.md for details.
+; Licensed under an MIT licence.
+; Please see scribblings/licence.scrbl for details.
 ;
 ; For XDG Base Directory Specification
 ;   http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
