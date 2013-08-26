@@ -12,4 +12,4 @@
 (define compile-omit-paths '("private"))
 (define release-notes
   (list
-   '(ul (li "Raises an exception if run on a non-Unix OS"))))
+   '(ul (li "Various internal structural changes"))))
