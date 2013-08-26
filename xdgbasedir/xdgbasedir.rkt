@@ -3,7 +3,6 @@
 ; Licensed under an MIT licence.
 ; Please see scribblings/licence.scrbl for details.
 
-(require racket/string)
 (require racket/contract)
 
 (provide
@@ -16,17 +15,32 @@
   [xdgbasedir-config-dirs (->* () (path-string?) (listof path?))]
   [xdgbasedir-runtime-dir (->* () (path-string?) (or/c path? boolean?))]))
 
+(require racket/string)
+
+;=====================================
+;              Exported
+;=====================================
+
 ; Defined as a parameter so that we can force the os when testing
 (define xdgbasedir-current-os (make-parameter (system-type 'os)))
 
-; Ensure will only run body on unix, else raise an exception
-(define-syntax-rule (run-on-unix-or-exn body ...)
-  (if (equal? (xdgbasedir-current-os) 'unix)
-      (begin body ...)
-      (error
-       (string-append "Unsupported os: "
-                      (symbol->string (xdgbasedir-current-os))))))
+(define (xdgbasedir-data-home [subdir ""]) (dir "XDG_DATA_HOME" subdir))
+(define (xdgbasedir-config-home [subdir ""]) (dir "XDG_CONFIG_HOME" subdir))
+(define (xdgbasedir-cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
+(define (xdgbasedir-data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
+(define (xdgbasedir-config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
 
+(define (xdgbasedir-runtime-dir [subdir ""])
+  (run-on-unix-or-exn
+   (let ([runtime-dir (getenv "XDG_RUNTIME_DIR")])
+     (if (string-not-empty? runtime-dir)
+         (build-full-path runtime-dir subdir)
+         #f))))
+
+
+;=====================================
+;              Internal
+;=====================================
 
 (define (default var)
   (case var
@@ -36,6 +50,14 @@
     [("XDG_DATA_DIRS") (list (build-path "/usr" "local" "share")
                              (build-path "/usr" "share"))]
     [("XDG_CONFIG_DIRS") (list (build-path "/etc" "xdg"))]))
+
+; Ensure will only run body on unix, else raise an exception
+(define-syntax-rule (run-on-unix-or-exn body ...)
+  (if (equal? (xdgbasedir-current-os) 'unix)
+      (begin body ...)
+      (error
+       (string-append "Unsupported os: "
+                      (symbol->string (xdgbasedir-current-os))))))
 
 (define (string-not-empty? str)
   (and str (not (equal? str ""))))
@@ -62,20 +84,3 @@
                (string-split env-var ":")
                (default var))])
      (map (λ (path) (build-full-path path subdir)) main-paths))))
-
-
-;==================================================
-;                  Exported Functions
-;==================================================
-(define (xdgbasedir-data-home [subdir ""]) (dir "XDG_DATA_HOME" subdir))
-(define (xdgbasedir-config-home [subdir ""]) (dir "XDG_CONFIG_HOME" subdir))
-(define (xdgbasedir-cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
-(define (xdgbasedir-data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
-(define (xdgbasedir-config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
-
-(define (xdgbasedir-runtime-dir [subdir ""])
-  (run-on-unix-or-exn
-   (let ([runtime-dir (getenv "XDG_RUNTIME_DIR")])
-     (if (string-not-empty? runtime-dir)
-         (build-full-path runtime-dir subdir)
-         #f))))
