@@ -3,7 +3,7 @@
 (define name "xdgbasedir")
 (define blurb
   (list "Functions to work with the XDG Base Directory Specification"))
-(define homepage "https://github.com/LawrenceWoodman/xdgbasedir_rkt/")
+(define homepage "http://lawrencewoodman.github.io/xdgbasedir_rkt/")
 (define primary-file "main.rkt")
 (define scribblings '(("scribblings/xdgbasedir.scrbl" (multi-page))))
 (define categories '(io))
