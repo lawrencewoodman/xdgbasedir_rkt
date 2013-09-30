@@ -12,4 +12,4 @@
 (define compile-omit-paths '("private"))
 (define release-notes
   (list
-   '(ul (li "Various internal structural changes"))))
+   '(ul (li "Removes xdgbasedir- prefix from exported functions"))))
