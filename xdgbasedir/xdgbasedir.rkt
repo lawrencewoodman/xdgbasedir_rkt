@@ -8,12 +8,12 @@
 (provide
  xdgbasedir-current-os
  (contract-out
-  [xdgbasedir-data-home (->* () (path-string?) path?)]
-  [xdgbasedir-config-home (->* () (path-string?) path?)]
-  [xdgbasedir-cache-home (->* () (path-string?) path?)]
-  [xdgbasedir-data-dirs (->* () (path-string?) (listof path?))]
-  [xdgbasedir-config-dirs (->* () (path-string?) (listof path?))]
-  [xdgbasedir-runtime-dir (->* () (path-string?) (or/c path? boolean?))]))
+  [data-home (->* () (path-string?) path?)]
+  [config-home (->* () (path-string?) path?)]
+  [cache-home (->* () (path-string?) path?)]
+  [data-dirs (->* () (path-string?) (listof path?))]
+  [config-dirs (->* () (path-string?) (listof path?))]
+  [runtime-dir (->* () (path-string?) (or/c path? boolean?))]))
 
 (require racket/string)
 
@@ -24,13 +24,13 @@
 ; Defined as a parameter so that we can force the os when testing
 (define xdgbasedir-current-os (make-parameter (system-type 'os)))
 
-(define (xdgbasedir-data-home [subdir ""]) (dir "XDG_DATA_HOME" subdir))
-(define (xdgbasedir-config-home [subdir ""]) (dir "XDG_CONFIG_HOME" subdir))
-(define (xdgbasedir-cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
-(define (xdgbasedir-data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
-(define (xdgbasedir-config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
+(define (data-home [subdir ""]) (dir "XDG_DATA_HOME" subdir))
+(define (config-home [subdir ""]) (dir "XDG_CONFIG_HOME" subdir))
+(define (cache-home [subdir ""]) (dir "XDG_CACHE_HOME" subdir))
+(define (data-dirs [subdir ""]) (dirs "XDG_DATA_DIRS" subdir))
+(define (config-dirs [subdir ""]) (dirs "XDG_CONFIG_DIRS" subdir))
 
-(define (xdgbasedir-runtime-dir [subdir ""])
+(define (runtime-dir [subdir ""])
   (run-on-unix-or-exn
    (let ([runtime-dir (getenv "XDG_RUNTIME_DIR")])
      (if (string-not-empty? runtime-dir)

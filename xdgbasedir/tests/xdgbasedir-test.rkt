@@ -13,7 +13,7 @@
  exn:fail?
  (λ ()
    (parameterize ([xdgbasedir-current-os 'windows])
-     (xdgbasedir-data-home))))
+     (data-home))))
 
 (test-equal?
  "data-home returns the set XDG_DATA_HOME directory"
@@ -21,7 +21,7 @@
   (before-every-test)
   (putenv "XDG_DATA_HOME"
           (path->string (build-path "/tmp" "xdg_data_home")))
-  (xdgbasedir-data-home)
+  (data-home)
   (after-every-test))
  (build-path "/tmp" "xdg_data_home"))
 
@@ -31,7 +31,7 @@
   (before-every-test)
   (putenv "XDG_DATA_HOME"
           (path->string (build-path "/tmp" "xdg_data_home")))
-  (xdgbasedir-data-home "some_dir")
+  (data-home "some_dir")
   (after-every-test))
  (build-path "/tmp" "xdg_data_home" "some_dir"))
 
@@ -40,7 +40,7 @@
  (around
   (before-every-test)
   (putenv "XDG_DATA_HOME" "")
-  (xdgbasedir-data-home)
+  (data-home)
   (after-every-test))
  (build-path (getenv "HOME") ".local" "share"))
 
@@ -49,7 +49,7 @@
  (around
   (before-every-test)
   (putenv "XDG_DATA_HOME" "")
-  (xdgbasedir-data-home "some_dir")
+  (data-home "some_dir")
   (after-every-test))
  (build-path (getenv "HOME") ".local" "share" "some_dir"))
 
@@ -59,7 +59,7 @@
  exn:fail?
  (λ ()
    (parameterize ([xdgbasedir-current-os 'macosx])
-     (xdgbasedir-config-home))))
+     (config-home))))
 
 (test-equal?
  "config-home returns the set XDG_CONFIG_HOME directory"
@@ -67,7 +67,7 @@
   (before-every-test)
   (putenv "XDG_CONFIG_HOME"
           (path->string (build-path "/tmp" "xdg_config_home")))
-  (xdgbasedir-config-home)
+  (config-home)
   (after-every-test))
  (build-path "/tmp" "xdg_config_home"))
 
@@ -77,7 +77,7 @@
   (before-every-test)
   (putenv "XDG_CONFIG_HOME"
           (path->string (build-path "/tmp" "xdg_config_home")))
-  (xdgbasedir-config-home "some_dir")
+  (config-home "some_dir")
   (after-every-test))
  (build-path "/tmp" "xdg_config_home" "some_dir"))
 
@@ -86,7 +86,7 @@
  (around
   (before-every-test)
   (putenv "XDG_CONFIG_HOME" "")
-  (xdgbasedir-config-home)
+  (config-home)
   (after-every-test))
  (build-path (getenv "HOME") ".config"))
 
@@ -96,7 +96,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_CONFIG_HOME" "")
-  (xdgbasedir-config-home "some_dir")
+  (config-home "some_dir")
   (after-every-test))
  (build-path (getenv "HOME") ".config" "some_dir"))
 
@@ -106,7 +106,7 @@ not set"
  exn:fail?
  (λ ()
    (parameterize ([xdgbasedir-current-os 'windows])
-     (xdgbasedir-cache-home))))
+     (cache-home))))
 
 (test-equal?
  "cache-home returns the set XDG_CACHE_HOME directory"
@@ -114,7 +114,7 @@ not set"
   (before-every-test)
   (putenv "XDG_CACHE_HOME"
           (path->string (build-path "/tmp" "xdg_cache_home")))
-  (xdgbasedir-cache-home)
+  (cache-home)
   (after-every-test))
  (build-path "/tmp" "xdg_cache_home"))
 
@@ -124,7 +124,7 @@ not set"
   (before-every-test)
   (putenv "XDG_CACHE_HOME"
           (path->string (build-path "/tmp" "xdg_cache_home")))
-  (xdgbasedir-cache-home "some_dir")
+  (cache-home "some_dir")
   (after-every-test))
  (build-path "/tmp" "xdg_cache_home" "some_dir"))
 
@@ -133,7 +133,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_CACHE_HOME" "")
-  (xdgbasedir-cache-home)
+  (cache-home)
   (after-every-test))
  (build-path (getenv "HOME") ".cache"))
 
@@ -143,7 +143,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_CACHE_HOME" "")
-  (xdgbasedir-cache-home "some_dir")
+  (cache-home "some_dir")
   (after-every-test))
  (build-path (getenv "HOME") ".cache" "some_dir"))
 
@@ -153,7 +153,7 @@ not set"
  exn:fail?
  (λ ()
    (parameterize ([xdgbasedir-current-os 'windows])
-     (xdgbasedir-data-dirs))))
+     (data-dirs))))
 
 (test-equal?
  "data-dirs returns the set XDG_DATA_DIRS directories"
@@ -164,7 +164,7 @@ not set"
            (list (path->string (build-path "/tmp" "xdg_data_dir" "1"))
                  (path->string (build-path "/tmp" "xdg_data_dir" "2")))
            ":"))
-  (xdgbasedir-data-dirs)
+  (data-dirs)
   (after-every-test))
  (list (build-path "/tmp" "xdg_data_dir" "1")
        (build-path "/tmp" "xdg_data_dir" "2")))
@@ -178,7 +178,7 @@ not set"
            (list (path->string (build-path "/tmp" "xdg_data_dir" "1"))
                  (path->string (build-path "/tmp" "xdg_data_dir" "2")))
            ":"))
-  (xdgbasedir-data-dirs "some_dir")
+  (data-dirs "some_dir")
   (after-every-test))
  (list (build-path "/tmp" "xdg_data_dir" "1" "some_dir")
        (build-path "/tmp" "xdg_data_dir" "2" "some_dir")))
@@ -188,7 +188,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_DATA_DIRS" "")
-  (xdgbasedir-data-dirs)
+  (data-dirs)
   (after-every-test))
  (list (build-path "/usr" "local" "share")
        (build-path "/usr" "share")))
@@ -199,7 +199,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_DATA_DIRS" "")
-  (xdgbasedir-data-dirs "some_dir")
+  (data-dirs "some_dir")
   (after-every-test))
  (list (build-path "/usr" "local" "share" "some_dir")
        (build-path "/usr" "share" "some_dir")))
@@ -210,7 +210,7 @@ not set"
  exn:fail?
  (λ ()
    (parameterize ([xdgbasedir-current-os 'windows])
-     (xdgbasedir-config-dirs))))
+     (config-dirs))))
 
 (test-equal?
  "config-dirs returns the set XDG_CONFIG_DIRS directories"
@@ -221,7 +221,7 @@ not set"
            (list (path->string (build-path "/tmp" "xdg_config_dir" "1"))
                  (path->string (build-path "/tmp" "xdg_config_dir" "2")))
            ":"))
-  (xdgbasedir-config-dirs)
+  (config-dirs)
   (after-every-test))
  (list (build-path "/tmp" "xdg_config_dir" "1")
        (build-path "/tmp" "xdg_config_dir" "2")))
@@ -235,7 +235,7 @@ not set"
            (list (path->string (build-path "/tmp" "xdg_config_dir" "1"))
                  (path->string (build-path "/tmp" "xdg_config_dir" "2")))
            ":"))
-  (xdgbasedir-config-dirs "some_dir")
+  (config-dirs "some_dir")
   (after-every-test))
  (list (build-path "/tmp" "xdg_config_dir" "1" "some_dir")
        (build-path "/tmp" "xdg_config_dir" "2" "some_dir")))
@@ -245,7 +245,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_CONFIG_DIRS" "")
-  (xdgbasedir-config-dirs)
+  (config-dirs)
   (after-every-test))
  (list (build-path "/etc" "xdg")))
 
@@ -255,7 +255,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_CONFIG_DIRS" "")
-  (xdgbasedir-config-dirs "some_dir")
+  (config-dirs "some_dir")
   (after-every-test))
  (list (build-path "/etc" "xdg" "some_dir")))
 
@@ -264,7 +264,7 @@ not set"
  exn:fail?
  (λ ()
    (parameterize ([xdgbasedir-current-os 'windows])
-     (xdgbasedir-runtime-dir))))
+     (runtime-dir))))
 
 (test-equal?
  "runtime-dir returns the set XDG_RUNTIME_DIR directories"
@@ -272,7 +272,7 @@ not set"
   (before-every-test)
   (putenv "XDG_RUNTIME_DIR"
           (path->string (build-path "/tmp" "xdg_runtime_dir")))
-  (xdgbasedir-runtime-dir)
+  (runtime-dir)
   (after-every-test))
  (build-path "/tmp" "xdg_runtime_dir"))
 
@@ -282,7 +282,7 @@ not set"
   (before-every-test)
   (putenv "XDG_RUNTIME_DIR"
           (path->string (build-path "/tmp" "xdg_runtime_dir")))
-  (xdgbasedir-runtime-dir "some_dir")
+  (runtime-dir "some_dir")
   (after-every-test))
  (build-path "/tmp" "xdg_runtime_dir" "some_dir"))
 
@@ -291,7 +291,7 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_RUNTIME_DIR" "")
-  (xdgbasedir-runtime-dir)
+  (runtime-dir)
   (after-every-test))
  #f)
 
@@ -300,6 +300,6 @@ not set"
  (around
   (before-every-test)
   (putenv "XDG_RUNTIME_DIR" "")
-  (xdgbasedir-runtime-dir "some_dir")
+  (runtime-dir "some_dir")
   (after-every-test))
  #f)
